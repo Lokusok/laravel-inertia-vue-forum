@@ -8,8 +8,9 @@
             <div>
                 <div v-if="props.sections.length > 0" class="mb-3">
                     <select
-                        v-model="sectionId"
+                        v-model="form.section_id"
                         class="w-1/2 p-2 border-gray-300"
+                        @change="getBranches"
                     >
                         <option value="null" selected disabled>
                             Выберите раздел
@@ -23,15 +24,42 @@
                             {{ section.title }}
                         </option>
                     </select>
+
+                    <ErrorLabel v-if="form.errors.section_id">
+                        {{ form.errors.section_id }}
+                    </ErrorLabel>
+                </div>
+
+                <div v-if="branches.length > 0" class="mb-3">
+                    <select
+                        v-model="form.parent_id"
+                        class="w-1/2 p-2 border-gray-300"
+                    >
+                        <option value="null" selected disabled>
+                            Выберите ветку
+                        </option>
+
+                        <option
+                            v-for="branch in branches"
+                            :value="branch.id"
+                            :key="branch.id"
+                        >
+                            {{ branch.title }}
+                        </option>
+                    </select>
                 </div>
 
                 <div class="mb-3">
                     <input
-                        v-model="title"
+                        v-model="form.title"
                         type="text"
                         class="w-1/2 p-2 border-gray-300"
                         placeholder="Название ветки"
                     />
+
+                    <ErrorLabel v-if="form.errors.title">
+                        {{ form.errors.title }}
+                    </ErrorLabel>
                 </div>
 
                 <div>
@@ -50,9 +78,11 @@
 
 <script setup>
 import { ref } from "vue";
-import { router } from "@inertiajs/vue3";
+import axios from "axios";
+import { useForm } from "@inertiajs/vue3";
 
 import MainLayout from "../../Layouts/MainLayout.vue";
+import ErrorLabel from "@/Components/ui/ErrorLabel.vue";
 
 const props = defineProps({
     sections: {
@@ -61,25 +91,39 @@ const props = defineProps({
     },
 });
 
-const title = ref("");
-const sectionId = ref(null);
+const form = useForm({
+    title: "",
+    section_id: null,
+    parent_id: null,
+});
+
 const isButtonDisabled = ref(false);
+
+const branches = ref([]);
 
 const store = () => {
     isButtonDisabled.value = true;
 
-    router.post(
-        route("branches.store"),
-        {
-            section_id: sectionId.value,
-            title: title.value,
+    console.log(form);
+
+    form.post(route("branches.store"), {
+        onSuccess: () => {
+            form.title = "";
         },
-        {
-            onSuccess: () => {
-                title.value = "";
-                isButtonDisabled.value = false;
-            },
-        }
-    );
+
+        onFinish: () => {
+            isButtonDisabled.value = false;
+        },
+    });
+};
+
+const getBranches = async () => {
+    form.parent_id = null;
+
+    const url = route("sections.branches.index", [form.section_id]);
+
+    const res = await axios.get(url);
+
+    branches.value = res.data;
 };
 </script>

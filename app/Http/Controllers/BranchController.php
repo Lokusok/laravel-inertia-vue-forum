@@ -33,9 +33,6 @@ class BranchController extends Controller
         return redirect()->route('sections.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Branch $branch)
     {
         //

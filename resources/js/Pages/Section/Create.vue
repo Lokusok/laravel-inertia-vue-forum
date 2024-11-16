@@ -8,11 +8,15 @@
             <div>
                 <div class="mb-3">
                     <input
-                        v-model="title"
+                        v-model="form.title"
                         type="text"
                         class="w-1/2 p-2 border-gray-300"
                         placeholder="Название раздела"
                     />
+
+                    <ErrorLabel v-if="form.errors.title">
+                        {{ form.errors.title }}
+                    </ErrorLabel>
                 </div>
 
                 <div>
@@ -31,27 +35,28 @@
 
 <script setup>
 import { ref } from "vue";
-import { Link, router } from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 
-import MainLayout from "../../Layouts/MainLayout.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
+import ErrorLabel from "@/Components/ui/ErrorLabel.vue";
 
-const title = ref("");
 const isButtonDisabled = ref(false);
+
+const form = useForm({
+    title: "",
+});
 
 const store = () => {
     isButtonDisabled.value = true;
 
-    router.post(
-        route("sections.store"),
-        {
-            title: title.value,
+    form.post(route("sections.store"), {
+        onSuccess: () => {
+            title.value = "";
         },
-        {
-            onSuccess: () => {
-                title.value = "";
-                isButtonDisabled.value = false;
-            },
-        }
-    );
+
+        onFinish: () => {
+            isButtonDisabled.value = false;
+        },
+    });
 };
 </script>

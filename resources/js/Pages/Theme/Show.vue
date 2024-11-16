@@ -16,8 +16,15 @@
             >
                 <div class="w-2/6 p-4 border-r border-r-gray-300">
                     <div
-                        class="w-24 h-24 mx-auto mb-2 bg-gray-300 rounded-full"
-                    ></div>
+                        class="w-24 h-24 mx-auto mb-2 overflow-hidden bg-gray-300 rounded-full"
+                    >
+                        <img
+                            v-if="message.user.avatar_url"
+                            :src="message.user.avatar_url"
+                            :alt="message.user.name"
+                            class="w-24 h-24"
+                        />
+                    </div>
 
                     <div>
                         <h3 class="text-center">
@@ -34,7 +41,29 @@
                     </div>
 
                     <div>
-                        <p v-html="message.content" />
+                        <div class="mb-4">
+                            <p v-html="message.content" />
+                        </div>
+
+                        <div class="flex items-center justify-end">
+                            <div class="flex items-center gap-1">
+                                <span>
+                                    {{ message.likes }}
+                                </span>
+
+                                <button
+                                    class="hover:opacity-80 active:opacity-50"
+                                    @click="toggleLike(message)"
+                                >
+                                    <HeartIcon
+                                        :class="{
+                                            'fill-red-600': message.is_liked,
+                                            'stroke-sky-600': !message.is_liked,
+                                        }"
+                                    />
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -71,6 +100,7 @@ import { Head } from "@inertiajs/vue3";
 import axios from "axios";
 
 import MainLayout from "@/Layouts/MainLayout.vue";
+import HeartIcon from "@/Components/icons/HeartIcon.vue";
 
 const props = defineProps({
     theme: {
@@ -88,5 +118,14 @@ const publish = async () => {
     });
 
     editorNodeRef.value.innerHTML = "";
+};
+
+const toggleLike = async (message) => {
+    const res = await axios.post(route("messages.likes.toggle", message.id));
+
+    if (message.is_liked) message.likes--;
+    else message.likes++;
+
+    message.is_liked = !message.is_liked;
 };
 </script>

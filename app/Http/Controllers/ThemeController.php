@@ -38,6 +38,7 @@ class ThemeController extends Controller
 
     public function show(Theme $theme)
     {
+
         $theme = ThemeWithMessagesResource::make($theme)->resolve();
 
         return inertia('Theme/Show', compact('theme'));

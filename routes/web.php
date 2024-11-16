@@ -23,7 +23,9 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::group([], function () {
         Route::resource('sections', SectionController::class);
+
         Route::get('/sections/{section}/branches', [SectionController::class, 'branchesIndex'])->name('sections.branches.index');
+        Route::get('/sections/{section}/branches_except/{branch}', [SectionController::class, 'branchExceptIndex'])->name('sections.branches_except.index');
     });
 
     Route::group([], function () {

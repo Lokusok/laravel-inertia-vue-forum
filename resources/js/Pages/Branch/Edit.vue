@@ -3,7 +3,7 @@
 
     <MainLayout>
         <div class="flex items-center mb-3">
-            <h3 class="mr-4 text-xl">Добавить ветку</h3>
+            <h3 class="mr-4 text-xl">Изменить ветку</h3>
         </div>
 
         <div>
@@ -66,11 +66,11 @@
 
                 <div>
                     <button
-                        @click="store"
+                        @click="update"
                         class="px-5 py-2 font-bold text-white bg-green-700 rounded-lg hover:bg-green-600 active:bg-green-500 active:opacity-80 disabled:opacity-60"
                         :disabled="isButtonDisabled"
                     >
-                        Добавить
+                        Изменить
                     </button>
                 </div>
             </div>
@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useForm, Head } from "@inertiajs/vue3";
 import axios from "axios";
 
@@ -91,24 +91,33 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+
+    branch: {
+        type: Object,
+        required: true,
+    },
 });
 
 const form = useForm({
-    title: "",
-    section_id: null,
+    title: props.branch.title,
+    section_id: props.branch.section_id,
     parent_id: null,
+});
+
+onMounted(() => {
+    getBranches();
+
+    form.parent_id = props.branch.parent_id;
 });
 
 const isButtonDisabled = ref(false);
 
 const branches = ref([]);
 
-const store = () => {
+const update = () => {
     isButtonDisabled.value = true;
 
-    console.log(form);
-
-    form.post(route("branches.store"), {
+    form.patch(route("branches.update", props.branch.id), {
         onSuccess: () => {
             form.title = "";
         },

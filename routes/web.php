@@ -5,6 +5,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -46,6 +47,12 @@ Route::middleware('auth')->group(function () {
     // Сообщения
     Route::group([], function () {
         Route::resource('messages', MessageController::class);
+    });
+
+    // Пользователи
+    Route::group([], function () {
+        Route::get('/users/personal', [UserController::class, 'personal'])->name('users.personal');
+        Route::patch('/users/personal', [UserController::class, 'update'])->name('users.update');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

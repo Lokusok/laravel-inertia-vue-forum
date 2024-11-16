@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources\Theme;
 
+use App\Http\Resources\Message\MessageResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ThemeResource extends JsonResource
+class ThemeWithMessagesResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -14,6 +15,7 @@ class ThemeResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'branch_id' => $this->branch_id,
+            'messages' => MessageResource::collection($this->messages)->resolve()
         ];
     }
 }

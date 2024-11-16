@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Resources\Theme;
+namespace App\Http\Resources\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ThemeResource extends JsonResource
+class UserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'branch_id' => $this->branch_id,
+            'name' => $this->name,
+            'avatar' => $this->avatar
         ];
     }
 }

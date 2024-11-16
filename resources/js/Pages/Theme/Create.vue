@@ -35,9 +35,9 @@
 
                 <div>
                     <button
-                        @click="store"
-                        class="px-5 py-2 font-bold text-white bg-purple-700 rounded-lg hover:bg-purple-600 active:bg-purple-500 active:opacity-80 disabled:opacity-60"
                         :disabled="isButtonDisabled"
+                        class="px-5 py-2 font-bold text-white bg-purple-700 rounded-lg hover:bg-purple-600 active:bg-purple-500 active:opacity-80 disabled:opacity-60"
+                        @click="store"
                     >
                         Добавить
                     </button>

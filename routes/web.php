@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\ThemeController;
@@ -22,6 +23,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    // Разделы
     Route::group([], function () {
         Route::resource('sections', SectionController::class);
 
@@ -29,14 +31,21 @@ Route::middleware('auth')->group(function () {
         Route::get('/sections/{section}/branches_except/{branch}', [SectionController::class, 'branchExceptIndex'])->name('sections.branches_except.index');
     });
 
+    // Ветки
     Route::group([], function () {
         Route::resource('branches', BranchController::class);
 
         Route::get('/branches/{branch}/theme/create', [BranchController::class, 'themeCreate'])->name('branches.themes.create');
     });
 
+    // Темы
     Route::group([], function () {
         Route::resource('themes', ThemeController::class);
+    });
+
+    // Сообщения
+    Route::group([], function () {
+        Route::resource('messages', MessageController::class);
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

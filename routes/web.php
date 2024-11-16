@@ -3,6 +3,7 @@
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\ThemeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,6 +31,12 @@ Route::middleware('auth')->group(function () {
 
     Route::group([], function () {
         Route::resource('branches', BranchController::class);
+
+        Route::get('/branches/{branch}/theme/create', [BranchController::class, 'themeCreate'])->name('branches.themes.create');
+    });
+
+    Route::group([], function () {
+        Route::resource('themes', ThemeController::class);
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

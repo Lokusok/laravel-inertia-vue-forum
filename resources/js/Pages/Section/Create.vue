@@ -53,7 +53,7 @@ const store = () => {
 
     form.post(route("sections.store"), {
         onSuccess: () => {
-            form.title.value = "";
+            form.title = "";
         },
 
         onFinish: () => {

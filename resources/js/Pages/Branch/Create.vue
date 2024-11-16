@@ -122,10 +122,7 @@ const store = () => {
 const getBranches = async () => {
     form.parent_id = null;
 
-    const url = route("sections.branches_except.index", [
-        form.section_id,
-        props.branch.id,
-    ]);
+    const url = route("sections.branches.index", [form.section_id]);
 
     const res = await axios.get(url);
 

@@ -22,6 +22,7 @@
                         v-if="user.avatar_url"
                         :src="user.avatar_url"
                         :alt="user.name"
+                        class="object-cover w-24 h-24"
                     />
                 </button>
 

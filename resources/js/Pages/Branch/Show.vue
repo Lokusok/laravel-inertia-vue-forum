@@ -66,7 +66,7 @@
                 class="flex items-center"
             >
                 <Link
-                    :href="route('branches.show', branch.id)"
+                    :href="route('themes.show', theme.id)"
                     class="flex items-center w-full p-4 mr-4 bg-white border border-gray-300 hover:bg-gray-100 active:bg-gray-200 active:opacity-80"
                 >
                     <div class="mr-4">
@@ -83,14 +83,14 @@
 
                 <div class="flex gap-2">
                     <Link
-                        :href="route('branches.edit', branch.id)"
+                        :href="route('themes.edit', theme.id)"
                         class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-sky-600"
                     >
                         <PenIcon class="stroke-white" />
                     </Link>
 
                     <Link
-                        :href="route('branches.destroy', branch.id)"
+                        :href="route('themes.destroy', theme.id)"
                         method="DELETE"
                         class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-red-600"
                     >

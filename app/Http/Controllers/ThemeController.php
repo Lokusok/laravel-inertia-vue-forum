@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Theme\StoreRequest;
 use App\Http\Requests\Theme\UpdateRequest;
+use App\Http\Resources\Theme\ThemeResource;
 use App\Models\Theme;
 use Illuminate\Http\Request;
 
@@ -37,35 +38,33 @@ class ThemeController extends Controller
         return redirect()->route('branches.show', $data['branch_id']);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(UpdateRequest $theme)
+    public function show(Theme $theme)
     {
-        //
+        $theme = ThemeResource::make($theme)->resolve();
+
+        return inertia('Theme/Show', compact('theme'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Theme $theme)
     {
-        //
+        $theme = ThemeResource::make($theme)->resolve();
+
+        return inertia('Theme/Edit', compact('theme'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Theme $theme)
+    public function update(UpdateRequest $request, Theme $theme)
     {
-        //
+        $data = $request->validated();
+
+        $theme->update($data);
+
+        return redirect()->route('branches.show', $theme->branch->id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Theme $theme)
     {
-        //
+        $theme->delete();
+
+        return redirect()->route('branches.show', $theme->branch->id);
     }
 }

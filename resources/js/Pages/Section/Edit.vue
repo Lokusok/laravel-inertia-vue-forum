@@ -1,7 +1,7 @@
 <template>
     <MainLayout>
         <div class="flex items-center mb-3">
-            <h3 class="mr-4 text-xl">Добавить раздел</h3>
+            <h3 class="mr-4 text-xl">Отредактировать раздел</h3>
         </div>
 
         <div>
@@ -25,7 +25,7 @@
                         class="px-5 py-2 font-bold text-white bg-blue-700 rounded-lg hover:bg-blue-600 active:bg-blue-500 active:opacity-80 disabled:opacity-60"
                         :disabled="isButtonDisabled"
                     >
-                        Добавить
+                        Редактировать
                     </button>
                 </div>
             </div>
@@ -42,14 +42,21 @@ import ErrorLabel from "@/Components/ui/ErrorLabel.vue";
 
 const isButtonDisabled = ref(false);
 
+const props = defineProps({
+    section: {
+        type: Object,
+        required: true,
+    },
+});
+
 const form = useForm({
-    title: "",
+    title: props.section.title,
 });
 
 const store = () => {
     isButtonDisabled.value = true;
 
-    form.post(route("sections.store"), {
+    form.patch(route("sections.update", [props.section.id]), {
         onSuccess: () => {
             form.title.value = "";
         },

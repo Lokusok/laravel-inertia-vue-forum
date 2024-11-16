@@ -17,6 +17,13 @@
             </Link>
         </div>
 
+        <div
+            v-if="$page.props.flash.message"
+            class="p-3 bg-white rounded-lg shadow-sm"
+        >
+            {{ $page.props.flash.message }}
+        </div>
+
         <div v-if="props.sections">
             <div
                 v-for="section in props.sections"
@@ -24,8 +31,27 @@
                 class="mb-8"
             >
                 <div v-if="section.branches.length > 0">
-                    <div class="mb-4">
+                    <div class="flex items-center gap-2 mb-4">
                         <h3 class="text-lg">{{ section.title }}</h3>
+                        <Link
+                            :href="route('sections.edit', section.id)"
+                            class="hover:opacity-80 active:opacity-50"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="size-5"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                                />
+                            </svg>
+                        </Link>
                     </div>
 
                     <div v-for="branch in section.branches" :key="branch.id">
@@ -43,7 +69,7 @@
 </template>
 
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
 
 import MainLayout from "../../Layouts/MainLayout.vue";
 
@@ -53,4 +79,8 @@ const props = defineProps({
         required: true,
     },
 });
+
+const page = usePage();
+
+console.log(page.props.flash.message);
 </script>

@@ -1,4 +1,6 @@
 <template>
+    <Head title="Просмотр ветки" />
+
     <MainLayout>
         <div class="flex items-center mb-3">
             <h3 class="mr-4 text-xl">
@@ -11,7 +13,8 @@
 </template>
 
 <script setup>
-import MainLayout from "../../Layouts/MainLayout.vue";
+import { Head } from "@inertiajs/vue3";
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 const props = defineProps({
     branch: {

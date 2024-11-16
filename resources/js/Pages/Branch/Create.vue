@@ -1,4 +1,6 @@
 <template>
+    <Head title="Создание ветки" />
+
     <MainLayout>
         <div class="flex items-center mb-3">
             <h3 class="mr-4 text-xl">Добавить ветку</h3>
@@ -78,8 +80,8 @@
 
 <script setup>
 import { ref } from "vue";
+import { useForm, Head } from "@inertiajs/vue3";
 import axios from "axios";
-import { useForm } from "@inertiajs/vue3";
 
 import MainLayout from "../../Layouts/MainLayout.vue";
 import ErrorLabel from "@/Components/ui/ErrorLabel.vue";

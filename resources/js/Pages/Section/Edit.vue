@@ -1,4 +1,6 @@
 <template>
+    <Head title="Редактирование раздела" />
+
     <MainLayout>
         <div class="flex items-center mb-3">
             <h3 class="mr-4 text-xl">Отредактировать раздел</h3>

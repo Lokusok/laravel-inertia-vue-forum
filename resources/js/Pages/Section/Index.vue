@@ -4,9 +4,16 @@
             <h3 class="mr-4 text-xl">Разделы</h3>
             <Link
                 :href="route('sections.create')"
-                class="block w-8 px-2 py-1 text-center bg-white border border-gray-300 rounded-lg hover:bg-gray-100 active:bg-gray-200"
+                class="block w-1/4 px-2 py-1 mr-4 text-center bg-white border border-gray-300 rounded-lg hover:bg-gray-100 active:bg-gray-200"
             >
-                +
+                + Раздел
+            </Link>
+
+            <Link
+                :href="route('branches.create')"
+                class="block w-1/4 px-2 py-1 text-center bg-white border border-gray-300 rounded-lg hover:bg-gray-100 active:bg-gray-200"
+            >
+                + Ветка
             </Link>
         </div>
     </MainLayout>

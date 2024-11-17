@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('messages', MessageController::class);
 
         Route::post('/messages/{message}/likes', [MessageController::class, 'toggleLike'])->name('messages.likes.toggle');
+        Route::post('/messages/{message}/complaints', [MessageController::class, 'storeComplaint'])->name('messages.complaints.store');
     });
 
     // Пользователи

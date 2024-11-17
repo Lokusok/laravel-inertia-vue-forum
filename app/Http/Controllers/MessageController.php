@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Complaint\StoreRequest as ComplaintStoreRequest;
 use App\Http\Requests\Message\StoreRequest;
 use App\Http\Requests\Message\UpdateRequest;
 use App\Http\Resources\Message\MessageResource;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class MessageController extends Controller
 {
@@ -32,7 +34,13 @@ class MessageController extends Controller
         $data = $request->validated();
         $data['user_id'] = Auth::user()->id;
 
+        $ids = Str::of($data['content'])->matchAll('/@[\d]+/')->unique()->transform(function ($id) {
+            return Str::of($id)->replaceMatches('/@/', '')->value();
+        });
+
         $message = Message::query()->create($data);
+
+        $message->answeredUsers()->attach($ids);
 
         return MessageResource::make($message)->resolve();
     }
@@ -72,5 +80,14 @@ class MessageController extends Controller
     public function toggleLike(Message $message)
     {
         $message->likedUsers()->toggle(Auth::user()->id);
+    }
+
+    public function storeComplaint(ComplaintStoreRequest $request, Message $message)
+    {
+        $data = $request->validated();
+
+        $message->complaintedUsers()->attach(Auth::user()->id, $data);
+
+        return MessageResource::make($message)->resolve();
     }
 }

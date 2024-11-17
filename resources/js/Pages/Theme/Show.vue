@@ -14,7 +14,7 @@
                 :key="message.id"
                 class="flex bg-white border border-gray-300"
             >
-                <div class="w-2/6 p-4 border-r border-r-gray-300">
+                <div class="w-1/6 p-4 border-r border-r-gray-300">
                     <div
                         class="w-24 h-24 mx-auto mb-2 overflow-hidden bg-gray-300 rounded-full"
                     >
@@ -33,36 +33,99 @@
                     </div>
                 </div>
 
-                <div class="w-4/6 p-4">
+                <div class="flex flex-col justify-between w-5/6 p-4">
                     <div>
-                        <p class="text-sm italic text-gray-700">
-                            {{ message.time }}
-                        </p>
+                        <div>
+                            <p class="text-sm italic text-gray-700">
+                                {{ message.time }}
+                            </p>
+                        </div>
+
+                        <div
+                            v-if="message.is_not_solved_complaint"
+                            class="my-2"
+                        >
+                            <div
+                                class="flex items-center w-full p-2 bg-red-100 border-red-200 gap-x-2"
+                            >
+                                <ClockIcon class="size-5" />
+
+                                <p>Ваша жалоба в рассмотрении</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p v-html="message.content" />
+                        </div>
                     </div>
 
                     <div>
-                        <div class="mb-4">
-                            <p v-html="message.content" />
-                        </div>
-
-                        <div class="flex items-center justify-end">
-                            <div class="flex items-center gap-1">
-                                <span>
-                                    {{ message.likes }}
-                                </span>
+                        <div class="flex items-center gap-x-3">
+                            <div
+                                class="flex items-center justify-end w-full gap-x-3"
+                            >
+                                <button
+                                    class="inline-block px-3 py-2 text-sm text-center text-white bg-red-600 border border-red-700 rounded-lg hover:bg-red-700 active:bg-red-800"
+                                    @click="openComplaint(message)"
+                                >
+                                    {{
+                                        message.is_complaint
+                                            ? "Скрыть"
+                                            : "Пожаловаться"
+                                    }}
+                                </button>
 
                                 <button
-                                    class="hover:opacity-80 active:opacity-50"
-                                    @click="toggleLike(message)"
+                                    class="inline-block px-3 py-2 text-sm text-center text-white border rounded-lg bg-sky-600 border-sky-700 hover:bg-sky-700 active:bg-sky-800"
+                                    @click="quote(message.content)"
                                 >
-                                    <HeartIcon
-                                        :class="{
-                                            'fill-red-600': message.is_liked,
-                                            'stroke-sky-600': !message.is_liked,
-                                        }"
-                                    />
+                                    Цитировать
+                                </button>
+
+                                <button
+                                    class="inline-block px-3 py-2 text-sm text-center text-white bg-indigo-600 border border-indigo-700 rounded-lg hover:bg-indigo-700 active:bg-indigo-800"
+                                    @click="answer(message)"
+                                >
+                                    Ответить
                                 </button>
                             </div>
+
+                            <div class="flex items-center justify-end">
+                                <div class="flex items-center gap-1">
+                                    <span>
+                                        {{ message.likes }}
+                                    </span>
+
+                                    <button
+                                        class="hover:opacity-80 active:opacity-50"
+                                        @click="toggleLike(message)"
+                                    >
+                                        <HeartIcon
+                                            :class="{
+                                                'fill-red-600':
+                                                    message.is_liked,
+                                                'stroke-sky-600':
+                                                    !message.is_liked,
+                                            }"
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-if="message.is_complaint" class="flex mt-2">
+                            <input
+                                v-model="message.body"
+                                class="w-5/6 p-2 border border-gray-300 rounded-lg rounded-r-none"
+                                type="text"
+                                placeholder="Ваша жалоба"
+                            />
+                            <button
+                                class="block w-1/6 p-2 text-sm text-white bg-red-800 rounded-lg rounded-l-none hover:bg-red-900 active:opacity-70"
+                                @click="complaint(message)"
+                            >
+                                Отправить
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -101,6 +164,7 @@ import axios from "axios";
 
 import MainLayout from "@/Layouts/MainLayout.vue";
 import HeartIcon from "@/Components/icons/HeartIcon.vue";
+import ClockIcon from "@/Components/icons/ClockIcon.vue";
 
 const props = defineProps({
     theme: {
@@ -128,4 +192,60 @@ const toggleLike = async (message) => {
 
     message.is_liked = !message.is_liked;
 };
+
+const quote = (messageContent) => {
+    const selectionContent = window.getSelection().toString();
+    const content = selectionContent ? selectionContent : messageContent;
+
+    const editor = editorNodeRef.value;
+    const oldText = editor.innerHTML;
+
+    if (oldText) {
+        editor.innerHTML = `${oldText}<br><blockquote> ${content} </blockquote><br>`;
+    } else {
+        editor.innerHTML = `<blockquote> ${content} </blockquote><br>`;
+    }
+};
+
+const answer = (message) => {
+    const title = `<div class="w-full p-2 bg-gray-200 border border-gray-300">Ответ пользователю @${message.user.id} ${message.user.name} ${message.time}</div>`;
+
+    const editor = editorNodeRef.value;
+    const oldText = editor.innerHTML;
+
+    if (oldText) {
+        editor.innerHTML = `${oldText} ${title}<blockquote> ${message.content} </blockquote><br>`;
+    } else {
+        editor.innerHTML = `${title}<blockquote> ${message.content} </blockquote><br>`;
+    }
+};
+
+const openComplaint = (message) => {
+    message.body = "";
+    message.is_complaint = !message.is_complaint;
+};
+
+const complaint = async (message) => {
+    const res = await axios.post(
+        route("messages.complaints.store", message.id),
+        {
+            body: message.body,
+            theme_id: message.theme_id,
+        }
+    );
+
+    message.body = "";
+    message.is_complaint = false;
+    message.is_not_solved_complaint = res.data.is_not_solved_complaint;
+};
 </script>
+
+<style>
+blockquote {
+    display: block;
+    padding: 4px;
+    padding-left: 6px;
+    border-left: 4px solid #a0aec0;
+    background-color: #f6f6f6;
+}
+</style>

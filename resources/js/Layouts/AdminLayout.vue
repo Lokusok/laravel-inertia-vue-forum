@@ -35,6 +35,15 @@
                             Роли
                         </Link>
                     </div>
+
+                    <div>
+                        <Link
+                            :href="route('admin.users.index')"
+                            class="mr-4 text-blue-500 hover:underline active:opacity-70"
+                        >
+                            Пользователи
+                        </Link>
+                    </div>
                 </div>
             </div>
 

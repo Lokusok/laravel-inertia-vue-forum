@@ -2,7 +2,7 @@
     <component
         :is="props.isLink ? Link : 'button'"
         :href="route('sections.create')"
-        class="block w-1/4 px-2 py-1 mr-4 text-center bg-white border border-gray-300 rounded-lg hover:bg-gray-100 active:bg-gray-200"
+        class="block px-2 py-1 mr-4 text-center bg-white border border-gray-300 rounded-lg hover:bg-gray-100 active:bg-gray-200 whitespace-nowrap"
     >
         <slot />
     </component>

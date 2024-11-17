@@ -10,6 +10,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -70,11 +72,16 @@ Route::middleware('auth')->group(function () {
     // Админка
     Route::group([], function () {
         Route::get('/admin', [MainController::class, 'index'])->name('admin.main.index');
+
         Route::get('/admin/complaints', [ComplaintController::class, 'index'])->name('admin.complaints.index');
         Route::patch('/admin/complaints/{complaint}', [ComplaintController::class, 'update'])->name('admin.complaints.update');
+
         Route::get('/admin/roles', [RoleController::class, 'index'])->name('admin.roles.index');
         Route::get('/admin/roles/create', [RoleController::class, 'create'])->name('admin.roles.create');
         Route::post('/admin/roles', [RoleController::class, 'store'])->name('admin.roles.store');
+
+        Route::post('/admin/users/{user}/roles', [AdminUserController::class, 'toggleRole'])->name('admin.users.roles.store');
+        Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

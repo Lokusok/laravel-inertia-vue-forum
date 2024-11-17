@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\TestEvent;
 use App\Http\Controllers\Admin\ComplaintController;
 use App\Http\Controllers\Admin\MainController;
 use App\Http\Controllers\Admin\RoleController;
@@ -11,7 +12,7 @@ use App\Http\Controllers\SectionController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
-
+use App\Http\Controllers\NotificationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -82,6 +83,11 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/admin/users/{user}/roles', [AdminUserController::class, 'toggleRole'])->name('admin.users.roles.store');
         Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+    });
+
+    // Уведомления
+    Route::group([], function () {
+        Route::patch('/notifications/update_collection', [NotificationController::class, 'updateCollection'])->name('notifications.updateCollection');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

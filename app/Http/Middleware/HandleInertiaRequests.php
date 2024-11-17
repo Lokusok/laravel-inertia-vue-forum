@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Resources\Notification\NotificationResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -34,7 +35,9 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
-                'roles' => $request->user() ? $request->user()->roles()->get()->pluck('code')->toArray() : null,
+                'roles' => $request->user() ? $request->user()->roles()->get()->pluck('code')->toArray() : [],
+                'notifications' => $request->user() ? NotificationResource::collection($request->user()->notifications)->resolve() : [],
+                'notifications_count' => $request->user() ? NotificationResource::collection($request->user()->notifications)->count() : 0
             ],
             'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),

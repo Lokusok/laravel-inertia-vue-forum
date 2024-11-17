@@ -39,11 +39,19 @@ class Message extends Model
 
     public function getIsLikedAttribute()
     {
+        if (! Auth::user()) {
+            return false;
+        }
+
         return $this->likedUsers()->where('user_id', '=', Auth::user()->id)->exists();
     }
 
     public function getIsNotSolvedComplaintAttribute()
     {
+        if (! Auth::user()) {
+            return false;
+        }
+
         return $this->complaintedUsers()
             ->where('user_id', '=',  Auth::user()->id)
             ->where('is_solved', '=', false)

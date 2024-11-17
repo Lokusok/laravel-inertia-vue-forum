@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\StoreLikeEvent;
+use App\Events\StoreMessageEvent;
 use App\Http\Requests\Complaint\StoreRequest as ComplaintStoreRequest;
 use App\Http\Requests\Message\StoreRequest;
 use App\Http\Requests\Message\UpdateRequest;
@@ -51,6 +53,8 @@ class MessageController extends Controller
         });
 
         $message = Message::query()->create($data);
+
+        broadcast(new StoreMessageEvent($message))->toOthers();
 
         Image::whereIn('id', $imgIds)->update([
             'message_id' => $message->id
@@ -116,6 +120,8 @@ class MessageController extends Controller
         if (count($res['attached']) > 0) {
             NotificationService::store($message, null, 'Вам поставили лайк');
         }
+
+        broadcast(new StoreLikeEvent($message))->toOthers();
     }
 
     public function storeComplaint(ComplaintStoreRequest $request, Message $message)

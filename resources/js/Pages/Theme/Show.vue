@@ -207,6 +207,23 @@ const props = defineProps({
     },
 });
 
+Echo.channel(`themes.${props.theme.id}`)
+    .listen(".store_message", (res) => {
+        console.log(res, "<<<");
+        props.theme.messages.push(res.data);
+    })
+    .listen(".store_like", (res) => {
+        console.log(res);
+
+        props.theme.messages
+            .filter((message) => {
+                return message.id === res.data.id;
+            })
+            .map((message) => {
+                message.likes = res.data.likes;
+            });
+    });
+
 const editorNodeRef = useTemplateRef("editor");
 const commentImageUploaderNodeRef = useTemplateRef("commentImageUploader");
 
@@ -229,10 +246,18 @@ const handleEditorBarBoldClick = () => {
 };
 
 const publish = async () => {
-    const res = await axios.post(route("messages.store"), {
-        theme_id: props.theme.id,
-        content: editorNodeRef.value.innerHTML,
-    });
+    const res = await axios.post(
+        route("messages.store"),
+        {
+            theme_id: props.theme.id,
+            content: editorNodeRef.value.innerHTML,
+        },
+        {
+            headers: {
+                "X-Socket-Id": Echo.socketId(),
+            },
+        }
+    );
 
     editorNodeRef.value.innerHTML = "";
 

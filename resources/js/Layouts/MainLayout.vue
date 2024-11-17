@@ -11,5 +11,16 @@
 </template>
 
 <script setup>
+import { usePage, router } from "@inertiajs/vue3";
+
 import NavBar from "@/Components/parts/NavBar.vue";
+
+const page = usePage();
+
+const channelName = `users.notifications.${page.props.auth.user.id}`;
+
+Echo.private(channelName).listen(".user_notifications", (res) => {
+    console.log("Get in MainLayout: ", res);
+    router.reload();
+});
 </script>

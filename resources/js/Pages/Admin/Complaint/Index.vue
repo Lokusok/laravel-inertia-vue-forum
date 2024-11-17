@@ -39,26 +39,25 @@
                                     Ссылка
                                 </Link>
                             </td>
-                            <td class="p-2">{{ complaint.is_solved }}</td>
+                            <td class="p-2 whitespace-nowrap">
+                                {{
+                                    complaint.is_solved ? "Решено" : "В работе"
+                                }}
+                            </td>
                             <td class="p-2">
-                                <Link
+                                <button
                                     class="block mx-auto size-6 hover:opacity-80 active:opacity-50"
+                                    @click="update(complaint)"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke-width="1.5"
-                                        stroke="currentColor"
-                                        class="size-6"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                                        />
-                                    </svg>
-                                </Link>
+                                    <CheckIcon
+                                        :class="{
+                                            'stroke-green-600':
+                                                complaint.is_solved,
+                                            'stroke-red-600':
+                                                !complaint.is_solved,
+                                        }"
+                                    />
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -70,8 +69,10 @@
 
 <script setup>
 import { Link } from "@inertiajs/vue3";
+import axios from "axios";
 
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import CheckIcon from "@/Components/icons/CheckIcon.vue";
 
 const props = defineProps({
     complaints: {
@@ -79,4 +80,12 @@ const props = defineProps({
         required: true,
     },
 });
+
+const update = async (complaint) => {
+    const res = await axios.patch(
+        route("admin.complaints.update", complaint.id)
+    );
+
+    complaint.is_solved = res.data.is_solved;
+};
 </script>

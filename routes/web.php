@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::group([], function () {
         Route::get('/admin', [MainController::class, 'index'])->name('admin.main.index');
         Route::get('/admin/complaints', [ComplaintController::class, 'index'])->name('admin.complaints.index');
+        Route::patch('/admin/complaints/{complaint}', [ComplaintController::class, 'update'])->name('admin.complaints.update');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

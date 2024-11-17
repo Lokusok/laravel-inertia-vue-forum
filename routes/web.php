@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ComplaintController;
 use App\Http\Controllers\Admin\MainController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MessageController;
@@ -71,6 +72,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin', [MainController::class, 'index'])->name('admin.main.index');
         Route::get('/admin/complaints', [ComplaintController::class, 'index'])->name('admin.complaints.index');
         Route::patch('/admin/complaints/{complaint}', [ComplaintController::class, 'update'])->name('admin.complaints.update');
+        Route::get('/admin/roles', [RoleController::class, 'index'])->name('admin.roles.index');
+        Route::get('/admin/roles/create', [RoleController::class, 'create'])->name('admin.roles.create');
+        Route::post('/admin/roles', [RoleController::class, 'store'])->name('admin.roles.store');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

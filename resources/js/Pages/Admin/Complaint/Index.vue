@@ -1,4 +1,6 @@
 <template>
+    <Head title="Жалобы" />
+
     <AdminLayout>
         <div class="mb-4">
             <h3 class="mr-4 text-xl">Жалобы</h3>
@@ -68,8 +70,8 @@
 </template>
 
 <script setup>
-import { Link } from "@inertiajs/vue3";
 import axios from "axios";
+import { Link, Head } from "@inertiajs/vue3";
 
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import CheckIcon from "@/Components/icons/CheckIcon.vue";

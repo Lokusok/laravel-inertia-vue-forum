@@ -1,4 +1,6 @@
 <template>
+    <Head title="Статистика" />
+
     <AdminLayout>
         <div class="mb-4">
             <h3 class="mr-4 text-xl">Статистика</h3>
@@ -23,6 +25,8 @@
 </template>
 
 <script setup>
+import { Head } from "@inertiajs/vue3";
+
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 
 const props = defineProps({

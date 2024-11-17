@@ -1,9 +1,9 @@
 <template>
-    <Head title="Создание ветки" />
+    <Head title="Добавить роль" />
 
-    <MainLayout>
-        <div class="flex items-center mb-3">
-            <h3 class="mr-4 text-xl">Добавить ветку</h3>
+    <AdminLayout>
+        <div class="mb-4">
+            <h3 class="mr-4 text-xl">Добавить роль</h3>
         </div>
 
         <div>
@@ -34,7 +34,7 @@
 
                 <div v-if="branches.length > 0" class="mb-3">
                     <select
-                        v-model="form.parent_id"
+                        v-model="form.branch_id"
                         class="w-1/2 p-2 border-gray-300"
                     >
                         <option value="null" selected disabled>
@@ -75,15 +75,15 @@
                 </div>
             </div>
         </div>
-    </MainLayout>
+    </AdminLayout>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useForm, Head } from "@inertiajs/vue3";
-import axios from "axios";
 
-import MainLayout from "../../Layouts/MainLayout.vue";
+import AdminLayout from "@/Layouts/AdminLayout.vue";
+
 import ErrorLabel from "@/Components/ui/ErrorLabel.vue";
 
 const props = defineProps({
@@ -96,7 +96,7 @@ const props = defineProps({
 const form = useForm({
     title: "",
     section_id: null,
-    parent_id: null,
+    branch_id: null,
 });
 
 const isButtonDisabled = ref(false);
@@ -106,7 +106,7 @@ const branches = ref([]);
 const store = () => {
     isButtonDisabled.value = true;
 
-    form.post(route("branches.store"), {
+    form.post(route("admin.roles.store"), {
         onSuccess: () => {
             form.title = "";
         },
@@ -118,7 +118,7 @@ const store = () => {
 };
 
 const getBranches = async () => {
-    form.parent_id = null;
+    form.branch_id = null;
 
     const url = route("sections.branches.index", [form.section_id]);
 

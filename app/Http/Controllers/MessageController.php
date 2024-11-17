@@ -8,8 +8,11 @@ use App\Http\Requests\Message\UpdateRequest;
 use App\Http\Resources\Message\MessageResource;
 use App\Models\Image;
 use App\Models\Message;
+use App\Models\Notification;
 use App\Models\User;
+use App\Service\NotificationService;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -67,6 +70,10 @@ class MessageController extends Controller
 
         $message->answeredUsers()->attach($ids);
 
+        $ids->each(function ($id) use ($message) {
+            NotificationService::store($message, $id, 'Вам ответили');
+        });
+
         return MessageResource::make($message)->resolve();
     }
 
@@ -104,14 +111,19 @@ class MessageController extends Controller
 
     public function toggleLike(Message $message)
     {
-        $message->likedUsers()->toggle(Auth::user()->id);
+        $res = $message->likedUsers()->toggle(Auth::user()->id);
+
+        if (count($res['attached']) > 0) {
+            NotificationService::store($message, null, 'Вам поставили лайк');
+        }
     }
 
     public function storeComplaint(ComplaintStoreRequest $request, Message $message)
     {
         $data = $request->validated();
-
         $message->complaintedUsers()->attach(Auth::user()->id, $data);
+
+        NotificationService::store($message, null, 'На вас пожаловались');
 
         return MessageResource::make($message)->resolve();
     }

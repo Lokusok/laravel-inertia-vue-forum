@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Complaint\ComplaintResource;
 use App\Models\Complaint;
+use App\Service\NotificationService;
 use Illuminate\Http\Request;
 
 class ComplaintController extends Controller
@@ -23,6 +24,14 @@ class ComplaintController extends Controller
         $complaint->update([
             'is_solved' => ! $complaint->is_solved
         ]);
+
+        $title = 'Ваша жалоба в работе';
+
+        if ($complaint->is_solved) {
+            $title = 'Ваша жалоба рассмотрена';
+        }
+
+        NotificationService::store($complaint->message, $complaint->user_id, $title);
 
         return ComplaintResource::make($complaint)->resolve();
     }

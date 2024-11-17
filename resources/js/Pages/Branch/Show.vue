@@ -7,12 +7,25 @@
                 Просмотр ветки | {{ props.branch.title }}
             </h3>
 
-            <LongButton
-                :href="route('branches.themes.create', props.branch.id)"
-                :is-link="true"
+            <template
+                v-if="
+                    $page.props.auth.roles.some((code) => {
+                        return Validator.checkIfHavePermissions(
+                            code,
+                            props.branch.section_id,
+                            props.branch,
+                            { withParent: true }
+                        );
+                    })
+                "
             >
-                + Тема
-            </LongButton>
+                <LongButton
+                    :href="route('branches.themes.create', props.branch.id)"
+                    :is-link="true"
+                >
+                    + Тема
+                </LongButton>
+            </template>
         </div>
 
         <div class="mb-8">
@@ -36,22 +49,35 @@
                     <h3>{{ branch.title }}</h3>
                 </Link>
 
-                <div class="flex gap-2">
-                    <Link
-                        :href="route('branches.edit', branch.id)"
-                        class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-sky-600"
-                    >
-                        <PenIcon class="stroke-white" />
-                    </Link>
+                <template
+                    v-if="
+                        $page.props.auth.roles.some((code) => {
+                            return Validator.checkIfHavePermissions(
+                                code,
+                                branch.section_id,
+                                branch,
+                                { withParent: true }
+                            );
+                        })
+                    "
+                >
+                    <div class="flex gap-2">
+                        <Link
+                            :href="route('branches.edit', branch.id)"
+                            class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-sky-600"
+                        >
+                            <PenIcon class="stroke-white" />
+                        </Link>
 
-                    <Link
-                        :href="route('branches.destroy', branch.id)"
-                        method="DELETE"
-                        class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-red-600"
-                    >
-                        <TrashIcon class="stroke-white" />
-                    </Link>
-                </div>
+                        <Link
+                            :href="route('branches.destroy', branch.id)"
+                            method="DELETE"
+                            class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-red-600"
+                        >
+                            <TrashIcon class="stroke-white" />
+                        </Link>
+                    </div>
+                </template>
             </div>
         </div>
 
@@ -81,22 +107,34 @@
                     </div>
                 </Link>
 
-                <div class="flex gap-2">
-                    <Link
-                        :href="route('themes.edit', theme.id)"
-                        class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-sky-600"
-                    >
-                        <PenIcon class="stroke-white" />
-                    </Link>
+                <template
+                    v-if="
+                        $page.props.auth.roles.some((code) => {
+                            return Validator.checkIfHavePermissions(
+                                code,
+                                branch.section_id,
+                                branch
+                            );
+                        })
+                    "
+                >
+                    <div class="flex gap-2">
+                        <Link
+                            :href="route('themes.edit', theme.id)"
+                            class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-sky-600"
+                        >
+                            <PenIcon class="stroke-white" />
+                        </Link>
 
-                    <Link
-                        :href="route('themes.destroy', theme.id)"
-                        method="DELETE"
-                        class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-red-600"
-                    >
-                        <TrashIcon class="stroke-white" />
-                    </Link>
-                </div>
+                        <Link
+                            :href="route('themes.destroy', theme.id)"
+                            method="DELETE"
+                            class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-red-600"
+                        >
+                            <TrashIcon class="stroke-white" />
+                        </Link>
+                    </div>
+                </template>
             </div>
         </div>
     </MainLayout>
@@ -112,6 +150,7 @@ import TrashIcon from "@/Components/icons/TrashIcon.vue";
 import LongButton from "@/Components/ui/LongButton.vue";
 import DocumentIcon from "@/Components/icons/DocumentIcon.vue";
 import FolderIcon from "@/Components/icons/FolderIcon.vue";
+import Validator from "@/Services/Validator";
 
 const props = defineProps({
     branch: {

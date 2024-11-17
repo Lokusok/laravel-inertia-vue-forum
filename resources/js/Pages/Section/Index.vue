@@ -32,20 +32,33 @@
                         <h3 class="mr-2 text-lg">{{ section.title }}</h3>
 
                         <div class="flex gap-2">
-                            <Link
-                                :href="route('sections.edit', section.id)"
-                                class="hover:opacity-80 active:opacity-50"
+                            <template
+                                v-if="
+                                    $page.props.auth.roles.some((code) =>
+                                        Validator.checkIfHavePermissions(
+                                            code,
+                                            section
+                                        )
+                                    )
+                                "
                             >
-                                <PenIcon />
-                            </Link>
+                                <Link
+                                    :href="route('sections.edit', section.id)"
+                                    class="hover:opacity-80 active:opacity-50"
+                                >
+                                    <PenIcon />
+                                </Link>
 
-                            <Link
-                                :href="route('sections.destroy', section.id)"
-                                method="DELETE"
-                                class="hover:opacity-80 active:opacity-50"
-                            >
-                                <TrashIcon />
-                            </Link>
+                                <Link
+                                    :href="
+                                        route('sections.destroy', section.id)
+                                    "
+                                    method="DELETE"
+                                    class="hover:opacity-80 active:opacity-50"
+                                >
+                                    <TrashIcon />
+                                </Link>
+                            </template>
                         </div>
                     </div>
 
@@ -62,20 +75,32 @@
                         </Link>
 
                         <div class="flex gap-2">
-                            <Link
-                                :href="route('branches.edit', branch.id)"
-                                class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-sky-600"
+                            <template
+                                v-if="
+                                    $page.props.auth.roles.some((code) =>
+                                        Validator.checkIfHavePermissions(
+                                            code,
+                                            section,
+                                            branch
+                                        )
+                                    )
+                                "
                             >
-                                <PenIcon class="stroke-white" />
-                            </Link>
+                                <Link
+                                    :href="route('branches.edit', branch.id)"
+                                    class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-sky-600"
+                                >
+                                    <PenIcon class="stroke-white" />
+                                </Link>
 
-                            <Link
-                                :href="route('branches.destroy', branch.id)"
-                                method="DELETE"
-                                class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-red-600"
-                            >
-                                <TrashIcon class="stroke-white" />
-                            </Link>
+                                <Link
+                                    :href="route('branches.destroy', branch.id)"
+                                    method="DELETE"
+                                    class="w-[35px] h-[35px] flex items-center justify-center rounded-sm hover:opacity-80 active:opacity-50 bg-red-600"
+                                >
+                                    <TrashIcon class="stroke-white" />
+                                </Link>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -85,7 +110,9 @@
 </template>
 
 <script setup>
-import { Link, usePage, Head } from "@inertiajs/vue3";
+import { Link, Head } from "@inertiajs/vue3";
+
+import Validator from "@/Services/Validator";
 
 import MainLayout from "@/Layouts/MainLayout.vue";
 import TrashIcon from "@/Components/icons/TrashIcon.vue";
@@ -98,6 +125,4 @@ const props = defineProps({
         required: true,
     },
 });
-
-const page = usePage();
 </script>

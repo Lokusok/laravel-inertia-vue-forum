@@ -18,13 +18,25 @@
                             Выберите раздел
                         </option>
 
-                        <option
+                        <template
                             v-for="section in props.sections"
-                            :value="section.id"
                             :key="section.id"
                         >
-                            {{ section.title }}
-                        </option>
+                            <template
+                                v-if="
+                                    $page.props.auth.roles.some((code) =>
+                                        Validator.checkIfHavePermissions(
+                                            code,
+                                            section
+                                        )
+                                    )
+                                "
+                            >
+                                <option :value="section.id">
+                                    {{ section.title }}
+                                </option>
+                            </template>
+                        </template>
                     </select>
 
                     <ErrorLabel v-if="form.errors.section_id">
@@ -85,6 +97,7 @@ import axios from "axios";
 
 import MainLayout from "../../Layouts/MainLayout.vue";
 import ErrorLabel from "@/Components/ui/ErrorLabel.vue";
+import Validator from "@/Services/Validator";
 
 const props = defineProps({
     sections: {

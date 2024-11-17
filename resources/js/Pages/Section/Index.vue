@@ -5,11 +5,35 @@
         <div class="flex items-center pb-4 mb-4 border-b border-b-gray-400">
             <h3 class="mr-4 text-xl">Разделы</h3>
 
-            <LongButton :href="route('sections.create')" :is-link="true">
+            <LongButton
+                v-if="
+                    $page.props.auth.roles.some(
+                        Validator.checkIfHaveAllPermissions
+                    )
+                "
+                :href="route('sections.create')"
+                :is-link="true"
+            >
                 + Раздел
             </LongButton>
 
-            <LongButton :href="route('branches.create')" :is-link="true">
+            <LongButton
+                v-if="
+                    $page.props.auth.roles.some((code) => {
+                        for (const section of props.sections) {
+                            if (
+                                Validator.checkIfHavePermissions(code, section)
+                            ) {
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    })
+                "
+                :href="route('branches.create')"
+                :is-link="true"
+            >
                 + Ветка
             </LongButton>
         </div>

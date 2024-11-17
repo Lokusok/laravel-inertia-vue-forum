@@ -23,6 +23,12 @@ class Validator {
 
         return codePatterns.includes(code);
     }
+
+    static checkIfHaveAllPermissions(code) {
+        const codePatterns = ["editor"];
+
+        return codePatterns.includes(code);
+    }
 }
 
 export default Validator;

@@ -137,6 +137,39 @@
                 <h3 class="text-xl">Добавить сообщение</h3>
             </div>
 
+            <div class="mb-4">
+                <div class="w-full p-2 border border-gray-100 bg-gray-50">
+                    <div>
+                        <button
+                            class="w-6 hover:opacity-80 active:opacity-60"
+                            @click="handleEditorBarImageClick"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="size-6"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                                />
+                            </svg>
+                        </button>
+
+                        <input
+                            hidden
+                            ref="commentImageUploader"
+                            type="file"
+                            @change="storeImage"
+                        />
+                    </div>
+                </div>
+            </div>
+
             <div>
                 <div
                     ref="editor"
@@ -174,6 +207,11 @@ const props = defineProps({
 });
 
 const editorNodeRef = useTemplateRef("editor");
+const commentImageUploaderNodeRef = useTemplateRef("commentImageUploader");
+
+const handleEditorBarImageClick = () => {
+    commentImageUploaderNodeRef.value.click();
+};
 
 const publish = async () => {
     const res = await axios.post(route("messages.store"), {
@@ -182,6 +220,8 @@ const publish = async () => {
     });
 
     editorNodeRef.value.innerHTML = "";
+
+    props.theme.messages.push(res.data);
 };
 
 const toggleLike = async (message) => {
@@ -237,6 +277,22 @@ const complaint = async (message) => {
     message.body = "";
     message.is_complaint = false;
     message.is_not_solved_complaint = res.data.is_not_solved_complaint;
+};
+
+const storeImage = async (e) => {
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await axios.post(route("images.store"), formData);
+
+    const image = `<span hidden>img_id=${res.data.id}</span><img src="${res.data.url}" />`;
+
+    const editor = editorNodeRef.value;
+    const oldText = editor.innerHTML;
+
+    editor.innerHTML = `${oldText}<br>${image}<br>`;
 };
 </script>
 

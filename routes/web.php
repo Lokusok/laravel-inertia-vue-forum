@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SectionController;
@@ -56,6 +57,11 @@ Route::middleware('auth')->group(function () {
     Route::group([], function () {
         Route::get('/users/personal', [UserController::class, 'personal'])->name('users.personal');
         Route::patch('/users/personal', [UserController::class, 'update'])->name('users.update');
+    });
+
+    // Изображения
+    Route::group([], function () {
+        Route::post('/images', [ImageController::class, 'store'])->name('images.store');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

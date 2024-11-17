@@ -11,9 +11,16 @@
 
                 <Link
                     :href="route('users.personal')"
-                    class="text-blue-500 hover:underline active:opacity-70"
+                    class="mr-4 text-blue-500 hover:underline active:opacity-70"
                 >
                     Личный кабинет
+                </Link>
+
+                <Link
+                    :href="route('admin.main.index')"
+                    class="text-blue-500 hover:underline active:opacity-70"
+                >
+                    Админ-панель
                 </Link>
             </div>
         </div>

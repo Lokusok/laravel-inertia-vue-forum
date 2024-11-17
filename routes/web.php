@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\ComplaintController;
+use App\Http\Controllers\Admin\MainController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MessageController;
@@ -62,6 +64,12 @@ Route::middleware('auth')->group(function () {
     // Изображения
     Route::group([], function () {
         Route::post('/images', [ImageController::class, 'store'])->name('images.store');
+    });
+
+    // Админка
+    Route::group([], function () {
+        Route::get('/admin', [MainController::class, 'index'])->name('admin.main.index');
+        Route::get('/admin/complaints', [ComplaintController::class, 'index'])->name('admin.complaints.index');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

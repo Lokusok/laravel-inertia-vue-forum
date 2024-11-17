@@ -12,6 +12,7 @@
             <div
                 v-for="message in props.theme.messages"
                 :key="message.id"
+                :id="message.id"
                 class="flex bg-white border border-gray-300"
             >
                 <div class="w-1/6 p-4 border-r border-r-gray-300">

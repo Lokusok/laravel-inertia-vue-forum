@@ -138,26 +138,15 @@
             </div>
 
             <div class="mb-4">
-                <div class="w-full p-2 border border-gray-100 bg-gray-50">
+                <div
+                    class="flex w-full p-2 border border-gray-100 bg-gray-50 gap-x-3"
+                >
                     <div>
                         <button
                             class="w-6 hover:opacity-80 active:opacity-60"
                             @click="handleEditorBarImageClick"
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="size-6"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                                />
-                            </svg>
+                            <ImageIcon />
                         </button>
 
                         <input
@@ -166,6 +155,15 @@
                             type="file"
                             @change="storeImage"
                         />
+                    </div>
+
+                    <div>
+                        <button
+                            class="w-6 hover:opacity-80 active:opacity-60"
+                            @click="handleEditorBarBoldClick"
+                        >
+                            <BLetterIcon />
+                        </button>
                     </div>
                 </div>
             </div>
@@ -198,6 +196,8 @@ import axios from "axios";
 import MainLayout from "@/Layouts/MainLayout.vue";
 import HeartIcon from "@/Components/icons/HeartIcon.vue";
 import ClockIcon from "@/Components/icons/ClockIcon.vue";
+import ImageIcon from "@/Components/icons/ImageIcon.vue";
+import BLetterIcon from "@/Components/icons/BLetterIcon.vue";
 
 const props = defineProps({
     theme: {
@@ -211,6 +211,20 @@ const commentImageUploaderNodeRef = useTemplateRef("commentImageUploader");
 
 const handleEditorBarImageClick = () => {
     commentImageUploaderNodeRef.value.click();
+};
+
+const handleEditorBarBoldClick = () => {
+    const content = window.getSelection();
+
+    if (!content) return;
+
+    const range = content.getRangeAt(0);
+
+    const strong = document.createElement("strong");
+
+    strong.className = "..";
+
+    range.surroundContents(strong);
 };
 
 const publish = async () => {

@@ -10,12 +10,10 @@ use App\Http\Resources\Section\SectionWithBranchesResource;
 use App\Models\Branch;
 use App\Models\Section;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class SectionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $sections = Section::query()->with('branches')->get();
@@ -25,19 +23,17 @@ class SectionController extends Controller
         return inertia('Section/Index', compact('sections'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
+        Gate::authorize('create', Section::class);
+
         return inertia('Section/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreRequest $request)
     {
+        Gate::authorize('create', Section::class);
+
         $data = $request->validated();
 
         Section::firstOrCreate($data);
@@ -45,17 +41,11 @@ class SectionController extends Controller
         return redirect()->route('sections.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Section $section)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Section $section)
     {
         $section = SectionResource::make($section)->resolve();
@@ -63,9 +53,6 @@ class SectionController extends Controller
         return inertia('Section/Edit', compact('section'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateRequest $request, Section $section)
     {
         $data = $request->validated();
@@ -75,11 +62,10 @@ class SectionController extends Controller
         return redirect()->route('sections.index')->with('message', 'Раздел успешно отредактирован');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Section $section)
     {
+        Gate::authorize('delete', Section::class);
+
         $section->delete();
 
         return redirect()->back();

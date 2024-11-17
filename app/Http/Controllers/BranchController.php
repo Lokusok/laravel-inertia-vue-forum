@@ -10,6 +10,7 @@ use App\Http\Resources\Section\SectionResource;
 use App\Models\Branch;
 use App\Models\Section;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class BranchController extends Controller
 {
@@ -44,6 +45,8 @@ class BranchController extends Controller
 
     public function edit(Branch $branch)
     {
+        Gate::authorize('update', $branch);
+
         $sections = Section::query()->get();
         $sections = SectionResource::collection($sections)->resolve();
 
@@ -54,6 +57,8 @@ class BranchController extends Controller
 
     public function update(UpdateRequest $request, Branch $branch)
     {
+        Gate::authorize('update', $branch);
+
         $data = $request->validated();
 
         $branch->update($data);
@@ -63,6 +68,8 @@ class BranchController extends Controller
 
     public function destroy(Branch $branch)
     {
+        Gate::authorize('delete', $branch);
+
         $branch->delete();
 
         return redirect()->route('sections.index');

@@ -69,12 +69,8 @@ const form = useForm({
     branch_id: props.branch.id,
 });
 
-console.log(props, form);
-
 const store = () => {
     isButtonDisabled.value = true;
-
-    console.log(form.branch_id);
 
     form.post(route("themes.store"), {
         onSuccess: () => {

@@ -37,24 +37,24 @@ class Message extends Model
         return $this->belongsToMany(User::class, 'complaints', 'message_id', 'user_id');
     }
 
-    public function getIsLikedAttribute()
-    {
-        if (! Auth::user()) {
-            return false;
-        }
+    // public function getIsLikedAttribute()
+    // {
+    //     if (! Auth::user()) {
+    //         return false;
+    //     }
 
-        return $this->likedUsers()->where('user_id', '=', Auth::user()->id)->exists();
-    }
+    //     return $this->likedUsers()->where('user_id', '=', Auth::user()->id)->exists();
+    // }
 
-    public function getIsNotSolvedComplaintAttribute()
-    {
-        if (! Auth::user()) {
-            return false;
-        }
+    // public function getIsNotSolvedComplaintAttribute()
+    // {
+    //     if (! Auth::user()) {
+    //         return false;
+    //     }
 
-        return $this->complaintedUsers()
-            ->where('user_id', '=',  Auth::user()->id)
-            ->where('is_solved', '=', false)
-            ->exists();
-    }
+    //     return $this->complaintedUsers()
+    //         ->where('user_id', '=',  Auth::user()->id)
+    //         ->where('is_solved', '=', false)
+    //         ->exists();
+    // }
 }

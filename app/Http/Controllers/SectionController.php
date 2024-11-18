@@ -16,7 +16,7 @@ class SectionController extends Controller
 {
     public function index()
     {
-        $sections = Section::query()->with('branches')->get();
+        $sections = Section::query()->with('parentBranches')->get();
 
         $sections = SectionWithBranchesResource::collection($sections)->resolve();
 
@@ -39,11 +39,6 @@ class SectionController extends Controller
         Section::firstOrCreate($data);
 
         return redirect()->route('sections.index');
-    }
-
-    public function show(Section $section)
-    {
-        //
     }
 
     public function edit(Section $section)

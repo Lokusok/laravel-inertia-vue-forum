@@ -4,10 +4,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+
+use function App\getId;
 
 class User extends Authenticatable
 {
@@ -59,8 +62,27 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class, 'user_id', 'id')->where('is_read', '=', false);
     }
 
+    public function likedMessages(): BelongsToMany
+    {
+        return $this->belongsTomany(Message::class, 'message_user_likes', 'user_id', 'message_id');
+    }
+
+    public function complaintedMessages()
+    {
+        return $this->belongsTomany(Message::class, 'complaints', 'user_id', 'message_id');
+    }
+
     public function getAvatarUrlAttribute()
     {
         return $this->avatar ? url('storage/' . $this->avatar) : null;
+    }
+
+    public static function getCleanedUserId($data)
+    {
+        $result = getId($data, '/@[\d]+/', '/@/')->filter(function ($id) {
+            return User::where('id', '=', $id)->exists();
+        });
+
+        return $result;
     }
 }

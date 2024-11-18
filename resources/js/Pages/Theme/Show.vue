@@ -209,12 +209,9 @@ const props = defineProps({
 
 Echo.channel(`themes.${props.theme.id}`)
     .listen(".store_message", (res) => {
-        console.log(res, "<<<");
         props.theme.messages.push(res.data);
     })
     .listen(".store_like", (res) => {
-        console.log(res);
-
         props.theme.messages
             .filter((message) => {
                 return message.id === res.data.id;

@@ -20,7 +20,6 @@ const page = usePage();
 const channelName = `users.notifications.${page.props.auth.user.id}`;
 
 Echo.private(channelName).listen(".user_notifications", (res) => {
-    console.log("Get in MainLayout: ", res);
     router.reload();
 });
 </script>

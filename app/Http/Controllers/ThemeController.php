@@ -11,22 +11,6 @@ use Illuminate\Http\Request;
 
 class ThemeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
     public function store(StoreRequest $request)
     {
         $data = $request->validated();
@@ -38,7 +22,6 @@ class ThemeController extends Controller
 
     public function show(Theme $theme)
     {
-
         $theme = ThemeWithMessagesResource::make($theme)->resolve();
 
         return inertia('Theme/Show', compact('theme'));
